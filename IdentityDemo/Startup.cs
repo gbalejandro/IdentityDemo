@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityDemo.Data;
 using IdentityDemo.Models;
 using IdentityDemo.Services;
+using IdentityDemo.Policies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityDemo
 {
@@ -33,8 +35,16 @@ namespace IdentityDemo
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("PolicyCategoriaEmpleado", 
+                    pol => pol.Requirements.Add(new CategoriaEmpleadoRequirement()));
+            });
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddSingleton<IAuthorizationHandler, CategoriaEmpleadoHandler>();
 
             services.AddMvc();
         }

@@ -22,26 +22,35 @@ namespace IdentityDemo.Controllers
             this.roleManager = roleManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                
+                var user = await userManager.GetUserAsync(HttpContext.User);
+                //await userManager.AddClaimAsync(user, new System.Security.Claims.Claim("CategoriaEmpleado", "4"));
+                var claims = User.Claims.ToList();
+            }
+
             return View();
         }
 
         public async Task<IActionResult> About()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-                var user = await userManager.GetUserAsync(HttpContext.User);
-                await userManager.AddToRoleAsync(user, "Admin");
-            }
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    await roleManager.CreateAsync(new IdentityRole("Admin"));
+            //    var user = await userManager.GetUserAsync(HttpContext.User);
+            //    await userManager.AddToRoleAsync(user, "Admin");
+            //}
 
             ViewData["Message"] = "Your application description page.";
 
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [Authorize(Policy = "PolicyCategoriaEmpleado")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
