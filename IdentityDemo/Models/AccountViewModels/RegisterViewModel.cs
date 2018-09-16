@@ -8,13 +8,15 @@ namespace IdentityDemo.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
-        [Required]
+        public const int requiredLengthForPassword = 6;
+
+        [Required(ErrorMessage = "El campo {0} es requerido")]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = Startup.requiredLengthForPassword)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
